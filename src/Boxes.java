@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Boxes {
     private ArrayList<Box> boxes = new ArrayList<>();
@@ -24,5 +25,9 @@ public class Boxes {
                 boxes.get(i).setTileBefore(tile);
             }
         }
+    }
+
+    public ArrayList<Box> getBoxes() {
+        return boxes;
     }
 }

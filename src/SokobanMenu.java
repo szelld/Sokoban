@@ -11,7 +11,7 @@ public class SokobanMenu extends JFrame {
     private JPanel screenPanel = new JPanel(cl);
     private GameMap map;
     private MapControl mapControl;
-
+    private String fileName;
 
 
     public SokobanMenu() {
@@ -22,7 +22,7 @@ public class SokobanMenu extends JFrame {
         JButton quiteButton = new JButton("Quit");
 
         setSize(700,700);
-        setLayout(new FlowLayout(FlowLayout.CENTER));
+        setLayout(new BorderLayout());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         menuPanel.setLayout(new BoxLayout(menuPanel,BoxLayout.Y_AXIS));
         menuPanel.add(sokobanLabel);
@@ -30,19 +30,14 @@ public class SokobanMenu extends JFrame {
         menuPanel.add(scoreboardButton);
         menuPanel.add(quiteButton);
 
-        startButton.addActionListener(e -> {
-            try { //TODO: Valamit kell kezdeni ezzel a dologga
-                SokobanGameFrame();
-            } catch (Exception ex) {
-                System.out.println(ex.getMessage());
-            }
-        });
+
+        startButton.addActionListener(e -> {SokobanMapSelect();});
         scoreboardButton.addActionListener(e -> SokobanMapSelect());
         quiteButton.addActionListener(e -> System.exit(0));
 
-        //screenPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        screenPanel.add(menuPanel, "Menu");
 
+
+        screenPanel.add(menuPanel, "Menu");
         cl.show(screenPanel,"Menu");
         add(screenPanel);
 
@@ -54,26 +49,26 @@ public class SokobanMenu extends JFrame {
     }
 
     public void SokobanMapSelect () {
+        setLayout(new FlowLayout());
         JPanel mapsPanel = new JPanel();
-        JPanel buttonPanel = new ButtonTable(4,10);
+        JPanel buttonPanel = new ButtonTable(4,10, this);
         JButton backToMenu = new JButton("Back");
         mapsPanel.add(buttonPanel);
         mapsPanel.add(backToMenu);
         backToMenu.addActionListener(e -> cl.show(screenPanel,"Menu"));
         buttonPanel.setAlignmentY(SwingConstants.CENTER);
         screenPanel.add(mapsPanel, "Table");
-        //add(backToMenu, BorderLayout.EAST);
         cl.show(screenPanel, "Table");
         pack();
 
     }
 
 
-    public void SokobanGameFrame () throws Exception {
-        //JLayeredPane mapPane = new JLayeredPane();
+    public void SokobanGameFrame (String filename) throws Exception {
+        fileName = filename;
         map = new GameMap();
 
-        map.loadMap("src/test.txt");
+        map.loadMap("src/"+fileName+".txt"); //TODO: Mapokat behúzni
         int rows = map.getRows(), columns = map.getColumns();
 
         JPanel gamePanel =  new JPanel(new GridLayout(rows,columns));
@@ -88,10 +83,6 @@ public class SokobanMenu extends JFrame {
         cl.show(screenPanel, "Game");
         pack();
 
-
-
-
-
     }
 
     public class InputKeyListener implements KeyListener {
@@ -101,7 +92,29 @@ public class SokobanMenu extends JFrame {
 
         @Override
         public void keyPressed(KeyEvent e) {
-            mapControl.moveCharacter(e.getKeyChar());
+           int i = mapControl.moveCharacter(e.getKeyChar());
+           if (i==0) {
+               JPanel losePanel = new JPanel();
+               JLabel loseLabel = new JLabel("Lost!");
+               JButton backButton = new JButton("Back to menu");
+               backButton.addActionListener(e1 -> {cl.show(screenPanel,"Menu");pack();});
+               losePanel.add(loseLabel);
+               losePanel.add(backButton);
+               screenPanel.add(losePanel, "Win");
+               cl.show(screenPanel, "Win");
+
+
+
+           } else if (i==1) {
+                JPanel winPanel = new JPanel();
+                JLabel winLabel = new JLabel("Win!");
+                JButton backButton = new JButton("Back to menu");
+                backButton.addActionListener(e1 -> {cl.show(screenPanel,"Menu");pack();});
+                winPanel.add(winLabel);
+                winPanel.add(backButton);
+                screenPanel.add(winPanel, "Win");
+                cl.show(screenPanel, "Win");
+           }
         }
 
         @Override

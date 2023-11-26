@@ -9,6 +9,7 @@ public class GameMap {
     private Player player = new Player();
     private int rows=0, columns=0;
     private Boxes boxes = new Boxes();
+    private int moves = 0;
 
 
     public GameMap () {
@@ -24,8 +25,10 @@ public class GameMap {
         while (fIn.ready()) {
             character = fIn.read();
             if (character != 10) {
-                map.add(character);
-                columns++;
+                if (character != 13) {
+                    map.add(character);
+                    columns++;
+                }
             }
             else {
                 rows++;
@@ -47,16 +50,14 @@ public class GameMap {
 
         }
         if(map.size()%rows == 0) columns = map.size()/rows;
-        else columns = (map.size()/rows) +1;
+        else columns = (map.size()/rows)+1;
     }
 
     public void setMap (int x, int y, int character) {
-        //TODO: Tesztelni beállítani egy helyet a mapban új értékre
         map.set(x*columns+y, character);
     }
 
     public int getTile (int x, int y) {
-        //TODO: Tesztelni egy character visszaadását
         return map.get(x*columns+y);
     }
 
@@ -80,23 +81,67 @@ public class GameMap {
         return player.getTileBefore();
     }
 
+    public int getBoxTile (int x, int y) {
+        return boxes.getBoxTile(x, y);
+    }
+
+    public int getMoves() {
+        return moves;
+    }
+
     public void setPlayerX (int x) {
         player.setX(x);
     }
 
     public void setPlayerY (int y) {
-        player.setX(y);
+        player.setY(y);
     }
 
     public void setPlayerTile (int tile) {
         player.setTileBefore(tile);
     }
 
-    public int getBoxTile (int x, int y) {
-        return boxes.getBoxTile(x, y);
+    public void addMoves() {
+        this.moves++;
     }
 
     public void setBoxTile (int prevX, int prevY, int newX, int newY, int tile) {
         boxes.setBoxTile(prevX, prevY, newX, newY, tile);
+    }
+
+    public boolean cornered () {
+
+        for (Box box: boxes.getBoxes()) {
+
+            if (getTile(box.getX(),box.getY()) == '$') {
+                if (getTile(box.getX(),box.getY()-1) == '#' || getTile(box.getX(),box.getY()-1) == '$' || getTile(box.getX(),box.getY()-1) == '*') {
+                    if (getTile(box.getX()-1,box.getY()) == '#' || getTile(box.getX()-1,box.getY()) == '$' || getTile(box.getX()-1,box.getY()) == '*') {
+                        return true;
+                    }
+                    if (getTile(box.getX()+1,box.getY()) == '#' || getTile(box.getX()+1,box.getY()) == '$' || getTile(box.getX()+1,box.getY()) == '*') {
+                        return true;
+                    }
+                }
+                if (getTile(box.getX(),box.getY()+1) == '#' || getTile(box.getX(),box.getY()+1) == '$' || getTile(box.getX(),box.getY()+1) == '*') {
+                    if (getTile(box.getX()+1,box.getY()) == '#' || getTile(box.getX()+1,box.getY()) == '$' || getTile(box.getX()+1,box.getY()) == '*') {
+                        return true;
+                    }
+                    if (getTile(box.getX()+1,box.getY()) == '#' || getTile(box.getX()+1,box.getY()) == '$' || getTile(box.getX()+1,box.getY()) == '*') {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public boolean win () {
+        for (Box box: boxes.getBoxes()) {
+            if (box.getTileBefore() != '.') {
+                return false;
+            }
+        }
+        return true;
     }
 }

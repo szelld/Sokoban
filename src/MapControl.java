@@ -53,65 +53,101 @@ public class MapControl {
         SwingUtilities.updateComponentTreeUI(gamePanel);
     }
 
-    public void moveCharacter (int direction) {
-        //TODO: Implementálni mozgatást
+    public int moveCharacter (int direction) {
+        int x1=0,x2=0,y1=0,y2=0;
         switch (direction) {
             case 'w': {
-                if (map.getTile(map.getPlayerX()-1, map.getPlayerY()) == '$') {
-                    if (map.getTile(map.getPlayerX()-2, map.getPlayerY()) == '#' || map.getTile(map.getPlayerX()-2, map.getPlayerY()) == '$' || map.getTile(map.getPlayerX()-2, map.getPlayerY()) == '*') {
-                        System.out.println("Nem tudsz erre lépni!");
-                    } else {
-                        if (map.getTile(map.getPlayerX()-2, map.getPlayerY()) == '.') {
-                            map.setMap(map.getPlayerX(), map.getPlayerY(), map.getPlayerTile()); //map[karakter.x][karakter.y] = originalMap[karakter.x][karakter.y];
-                            map.setPlayerTile(map.getBoxTile(map.getPlayerX()-1, map.getPlayerY()));
-                            map.setBoxTile(map.getPlayerX()-1, map.getPlayerY(), map.getPlayerX()-2, map.getPlayerY(),'.');
-
-                            map.setMap(map.getPlayerX()-2, map.getPlayerY(), '*'); //map[karakter.x - 2][karakter.y] = '*';
-                            map.setMap(map.getPlayerX()-1, map.getPlayerY(), '@');  //map[karakter.x - 1][karakter.y] = 'I';          ///Meg kell keresni miért ír ki plusz 0-kat
-                            map.setPlayerX(map.getPlayerX()-1);  //karakter.x -= 1;
-                        } else {
-                            map.setMap(map.getPlayerX(), map.getPlayerY(), map.getPlayerTile()); //map[karakter.x][karakter.y] = originalMap[karakter.x][karakter.y];
-                            map.setPlayerTile(map.getBoxTile(map.getPlayerX()-1, map.getPlayerY()));
-                            map.setBoxTile(map.getPlayerX()-1, map.getPlayerY(), map.getPlayerX()-2, map.getPlayerY(),' ');
-
-                            map.setMap(map.getPlayerX()-2, map.getPlayerY(), '$'); //map[karakter.x - 2][karakter.y] = '$';
-                            map.setMap(map.getPlayerX()-1, map.getPlayerY(), '@');  //map[karakter.x - 1][karakter.y] = 'I';
-                            map.setPlayerX(map.getPlayerX()-1);  //karakter.x -= 1;
-                        }
-                    }
-                } else if (map.getTile(map.getPlayerX()-1, map.getPlayerY()) == ' ' || map.getTile(map.getPlayerX()-1, map.getPlayerY()) == '.') {
-                    map.setMap(map.getPlayerX(), map.getPlayerY(), map.getPlayerTile()); //map[karakter.x][karakter.y] = originalMap[karakter.x][karakter.y];
-                    map.setPlayerTile(map.getTile(map.getPlayerX()-1, map.getPlayerY()));
-                    map.setMap(map.getPlayerX()-1, map.getPlayerY(), '@');
-                    map.setPlayerX(map.getPlayerX()-1);
-                } /*else if (map.getTile(map.getPlayerX()-1, map.getPlayerY()) == '.') {
-                    map.setMap(map.getPlayerX(), map.getPlayerY(), map.getPlayerTile()); //map[karakter.x][karakter.y] = originalMap[karakter.x][karakter.y];
-                    map.setPlayerTile(map.getTile(map.getPlayerX()-1, map.getPlayerY()));
-                    map.setMap(map.getPlayerX()-1, map.getPlayerY(), '@');
-                    map.setPlayerX(map.getPlayerX()-1);
-                }*/ else if (map.getTile(map.getPlayerX()-1, map.getPlayerY()) == '*') {
-                    if (map.getTile(map.getPlayerX()-2, map.getPlayerY()) == '#' || map.getTile(map.getPlayerX()-2, map.getPlayerY()) == '$' || map.getTile(map.getPlayerX()-2, map.getPlayerY()) == '*') { //map[karakter.x][karakter.y - 2] == '$'
-                        System.out.println("Nem tudsz erre lepni!");
-                    } else {
-                        map.setMap(map.getPlayerX(), map.getPlayerY(), map.getPlayerTile());
-                        map.setPlayerTile(map.getBoxTile(map.getPlayerX()-1, map.getPlayerY()));
-                        map.setBoxTile(map.getPlayerX()-1, map.getPlayerY(), map.getPlayerX()-2, map.getPlayerY(),map.getTile(map.getPlayerX()-2, map.getPlayerY()));
-                        map.setMap(map.getPlayerX()-1, map.getPlayerY(), '@');
-                        map.setMap(map.getPlayerX()-2, map.getPlayerY(), '$');
-                        map.setPlayerX(map.getPlayerX()-1);
-                    }
-                } else {
-                    System.out.println("Nem tudsz erre lepni!\n");
-                }
+                x1 = -1;
+                x2 = -2;
+                y1 = 0;
+                y2 = 0;
+                break;
+            }
+            case 's':{
+                x1 = +1;
+                x2 = +2;
+                y1 = 0;
+                y2 = 0;
+                break;
+            }
+            case 'a':{
+                x1 = 0;
+                x2 = 0;
+                y1 = -1;
+                y2 = -2;
+                break;
+            }
+            case 'd':{
+                x1 = 0;
+                x2 = 0;
+                y1 = +1;
+                y2 = +2;
                 break;
             }
         }
+
+        //TODO: Implementálni mozgatást
+        if (map.getTile(map.getPlayerX()+x1, map.getPlayerY()+y1) == '$' || map.getTile(map.getPlayerX()+x1, map.getPlayerY()+y1) == '*') {
+            if (map.getTile(map.getPlayerX()+x2, map.getPlayerY()+y2) == '#' || map.getTile(map.getPlayerX()+x2, map.getPlayerY()+y2) == '$' || map.getTile(map.getPlayerX()+x2, map.getPlayerY()+y2) == '*') {
+                System.out.println("Nem tudsz erre lépni!");
+            } else {
+                if (map.getTile(map.getPlayerX()+x2, map.getPlayerY()+y2) == '.') {
+                    map.setMap(map.getPlayerX(), map.getPlayerY(), map.getPlayerTile()); //map[karakter.x][karakter.y] = originalMap[karakter.x][karakter.y];
+                    map.setPlayerTile(map.getBoxTile(map.getPlayerX()+x1, map.getPlayerY()+y1));
+                    map.setBoxTile(map.getPlayerX()+x1, map.getPlayerY()+y1, map.getPlayerX()+x2, map.getPlayerY()+y2,'.');
+
+                    map.setMap(map.getPlayerX()+x2, map.getPlayerY()+y2, '*'); //map[karakter.x - 2][karakter.y] = '*';
+                    map.setMap(map.getPlayerX()+x1, map.getPlayerY()+y1, '@');  //map[karakter.x - 1][karakter.y] = 'I';          ///Meg kell keresni miért ír ki plusz 0-kat
+                    map.setPlayerX(map.getPlayerX()+x1);  //karakter.x -= 1;
+                    map.setPlayerY(map.getPlayerY()+y1);
+                    map.addMoves();
+                } else {
+                    map.setMap(map.getPlayerX(), map.getPlayerY(), map.getPlayerTile()); //map[karakter.x][karakter.y] = originalMap[karakter.x][karakter.y];
+                    map.setPlayerTile(map.getBoxTile(map.getPlayerX()+x1, map.getPlayerY()+y1));
+                    map.setBoxTile(map.getPlayerX()+x1, map.getPlayerY()+y1, map.getPlayerX()+x2, map.getPlayerY()+y2,' ');
+
+                    map.setMap(map.getPlayerX()+x2, map.getPlayerY()+y2, '$'); //map[karakter.x - 2][karakter.y] = '$';
+                    map.setMap(map.getPlayerX()+x1, map.getPlayerY()+y1, '@');  //map[karakter.x - 1][karakter.y] = 'I';
+                    map.setPlayerX(map.getPlayerX()+x1);  //karakter.x -= 1;
+                    map.setPlayerY(map.getPlayerY()+y1);
+                    map.addMoves();
+                }
+            }
+        } else if (map.getTile(map.getPlayerX()+x1, map.getPlayerY()+y1) == ' ' || map.getTile(map.getPlayerX()+x1, map.getPlayerY()+y1) == '.') {
+            map.setMap(map.getPlayerX(), map.getPlayerY(), map.getPlayerTile()); //map[karakter.x][karakter.y] = originalMap[karakter.x][karakter.y];
+            map.setPlayerTile(map.getTile(map.getPlayerX()+x1, map.getPlayerY()+y1));
+            map.setMap(map.getPlayerX()+x1, map.getPlayerY()+y1, '@');
+            map.setPlayerX(map.getPlayerX()+x1);
+            map.setPlayerY(map.getPlayerY()+y1);
+            map.addMoves();
+        } else if (map.getTile(map.getPlayerX()+x1, map.getPlayerY()+y1) == '*') {
+            if (map.getTile(map.getPlayerX()+x2, map.getPlayerY()+y2) == '#' || map.getTile(map.getPlayerX()+x2, map.getPlayerY()+y2) == '$' || map.getTile(map.getPlayerX()+x2, map.getPlayerY()+y2) == '*') { //map[karakter.x][karakter.y - 2] == '$'
+                System.out.println("Nem tudsz erre lepni!");
+            } else {
+                map.setMap(map.getPlayerX(), map.getPlayerY(), map.getPlayerTile());
+                map.setPlayerTile(map.getBoxTile(map.getPlayerX()+x1, map.getPlayerY()+y1));
+                map.setBoxTile(map.getPlayerX()+x1, map.getPlayerY()+y1, map.getPlayerX()+x2, map.getPlayerY()+y2,map.getTile(map.getPlayerX()+x2, map.getPlayerY()+y2));
+                map.setMap(map.getPlayerX()+x2, map.getPlayerY()+y2, '$');
+                map.setMap(map.getPlayerX()+x1, map.getPlayerY()+y1, '@');
+                map.setPlayerX(map.getPlayerX()+x1);
+                map.setPlayerY(map.getPlayerY()+y1);
+                map.addMoves();
+            }
+        } else {
+            System.out.println("Nem tudsz erre lepni!\n");
+        }
+
+
         drawMap();
 
+        if (map.win()) {
+            return 1;
+        }
+        if (map.cornered()) {
+            return 0;
+        }
+        return 2;
+
     }
 
-    public boolean winCondition () {
-        //TODO: Implementálni a win condition chack-et
-        return true;
-    }
 }
