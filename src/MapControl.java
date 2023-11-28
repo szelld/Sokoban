@@ -1,16 +1,27 @@
 import javax.swing.*;
-import java.awt.*;
-import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MapControl {
     private GameMap map;
     private JPanel gamePanel;
-    
+
+
+    /**
+     * Inicializálja a mapcontrolt
+     * @param map A térképet tartalmazó referencia
+     * @param gamePanel A térkép paneljét tartalmazó referencia
+     */
     public MapControl (GameMap map, JPanel gamePanel) {
         this.map = map;
         this.gamePanel = gamePanel;
     }
 
+
+    /**
+     *
+     * Kirajzolja a térképet
+     *
+     */
     public void drawMap () {
         int rows = map.getRows(), columns = map.getColumns(), character;
         //gamePanel = new JPanel(new GridLayout(rows,columns));
@@ -53,7 +64,13 @@ public class MapControl {
         SwingUtilities.updateComponentTreeUI(gamePanel);
     }
 
-    public int moveCharacter (int direction) {
+
+    /**
+     * Mozgatja a a karaktert
+     * @param direction Megadaj, hogy milyen irányba akara mozogni a karakter
+     * @return 0 - ha veszített a játékos, 1 - ha nyert a játékos, 2 - egyébként
+     */
+    public int moveCharacter (int direction) throws Exception {
         int x1=0,x2=0,y1=0,y2=0;
         switch (direction) {
             case 'w': {
@@ -141,7 +158,9 @@ public class MapControl {
         drawMap();
 
         if (map.win()) {
+            //Scoreboard scoreboard = new Scoreboard("src/scoreboards/"+ map.getFileName() +".txt");
             return 1;
+
         }
         if (map.cornered()) {
             return 0;

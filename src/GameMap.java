@@ -10,7 +10,14 @@ public class GameMap {
     private int rows=0, columns=0;
     private Boxes boxes = new Boxes();
     private int moves = 0;
+    private String fileName;
 
+
+    /**
+     *
+     * Inicializálja a térképet
+     *
+     */
 
     public GameMap () {
         /*map = new ArrayList<Integer>(rows*columns);
@@ -19,7 +26,8 @@ public class GameMap {
     }
 
     public void loadMap (String fileName) throws Exception {
-        FileReader fileReader = new FileReader(fileName);
+        this.fileName = fileName;
+        FileReader fileReader = new FileReader("src/maps/"+fileName+".txt");
         BufferedReader fIn = new BufferedReader(fileReader);
         int character;
         while (fIn.ready()) {
@@ -77,6 +85,10 @@ public class GameMap {
         return player.getY();
     }
 
+    public String getFileName() {
+        return fileName;
+    }
+
     public int getPlayerTile () {
         return player.getTileBefore();
     }
@@ -109,33 +121,40 @@ public class GameMap {
         boxes.setBoxTile(prevX, prevY, newX, newY, tile);
     }
 
+
+    /**
+     * Megnézi, hogy nincs-e a sarokban a doboz
+     * @return true - ha vesztett a játékos, false - ha nem
+     */
     public boolean cornered () {
 
         for (Box box: boxes.getBoxes()) {
 
+
             if (getTile(box.getX(),box.getY()) == '$') {
-                if (getTile(box.getX(),box.getY()-1) == '#' || getTile(box.getX(),box.getY()-1) == '$' || getTile(box.getX(),box.getY()-1) == '*') {
-                    if (getTile(box.getX()-1,box.getY()) == '#' || getTile(box.getX()-1,box.getY()) == '$' || getTile(box.getX()-1,box.getY()) == '*') {
-                        return true;
-                    }
-                    if (getTile(box.getX()+1,box.getY()) == '#' || getTile(box.getX()+1,box.getY()) == '$' || getTile(box.getX()+1,box.getY()) == '*') {
+                if (getTile(box.getX(),box.getY()-1) == '#' ) {
+                    if (getTile(box.getX()-1,box.getY()) == '#' || getTile(box.getX()+1,box.getY()) == '#') {
                         return true;
                     }
                 }
                 if (getTile(box.getX(),box.getY()+1) == '#' || getTile(box.getX(),box.getY()+1) == '$' || getTile(box.getX(),box.getY()+1) == '*') {
-                    if (getTile(box.getX()+1,box.getY()) == '#' || getTile(box.getX()+1,box.getY()) == '$' || getTile(box.getX()+1,box.getY()) == '*') {
-                        return true;
-                    }
-                    if (getTile(box.getX()+1,box.getY()) == '#' || getTile(box.getX()+1,box.getY()) == '$' || getTile(box.getX()+1,box.getY()) == '*') {
+                    if (getTile(box.getX()+1,box.getY()) == '#' || getTile(box.getX()+1,box.getY()) == '#') {
                         return true;
                     }
                 }
             }
+
+
         }
 
         return false;
     }
 
+
+    /**
+     * Megnézi, hogy nyert-e a játékos
+     * @return true - ha igen, false - ha nem
+     */
     public boolean win () {
         for (Box box: boxes.getBoxes()) {
             if (box.getTileBefore() != '.') {

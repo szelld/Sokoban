@@ -2,6 +2,13 @@ public class Box {
 
     private int x, y, tileBefore;
 
+
+    /**
+     * A konstruktor létehoz egy dobozot
+     * @param x A doboz x pozíciója
+     * @param y A doboz y pozíciója
+     * @param tileBefore Az a pozíció amin a doboz áll
+     */
     public Box (int x, int y, int tileBefore) {
         this.x = x;
         this.y = y;
